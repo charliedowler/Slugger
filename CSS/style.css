@@ -1,0 +1,10 @@
+body {
+	font-family: arial;
+	width:600px;
+	margin: 0 auto;
+}
+#canvas {
+border:1px #000 solid;
+background-image: url(../IMAGES/bg.png);
+background-repeat: repeat;
+}
