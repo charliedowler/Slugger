@@ -92,8 +92,9 @@ context.clearRect(0, 0, canvas.width, canvas.height);
 loadResources();
 }
 //Get mouse position
-//Seems to only work in chrome
-function mouse() {
-mouseX = window.event.offsetX;
-mouseY = window.event.offsetY;
-}
+$(document).ready(function() {
+	$("#canvas").mousemove(function(e) {
+		mouseX = e.pageX - this.offsetLeft;
+		mouseY = e.pageY - this.offsetTop;
+	});
+});

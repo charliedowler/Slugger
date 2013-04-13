@@ -2,6 +2,9 @@ body {
 	font-family: arial;
 	width:600px;
 	margin: 0 auto;
+	padding: 0;
+	display: block;
+	overflow: hidden;
 }
 #canvas {
 border:1px #000 solid;
