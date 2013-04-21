@@ -79,7 +79,7 @@ images[name].onload = function() {
 numberOfResourcesLoaded += 1;
 //Run finish loading after each resource is loaded
 finishedLoading();
-}
+};
 //Set the image source location
 images[name].src = "IMAGES/" + name + ".png";
 }
@@ -324,7 +324,7 @@ if (this.x + this.width < obj.x) return false;
 if (this.y > obj.y + obj.height) return false;
 if (this.y + this.height < obj.y) return false;
 return true;
-}
+};
 }
 function playGame() {
 //Clear canvas to be redrawn
@@ -344,9 +344,9 @@ for (i in slimeParticles) {
   if (slimeParticles[i].r > 4 || slimeParticles[i].x < 0 || slimeParticles[i].x > canvas.width || slimeParticles[i].y < 0 || slimeParticles[i].y > canvas.height) {slimeParticles.splice(i, 1);}
 }
 //Check whether hearts = 0, if true reset the game
-if (hearts.length == 0) {
+if (hearts.length === 0) {
 //Reset all x and y variables to the previous one
-slug.y = slug.PrevY;pipe.x = pipe.PrevX;for (i in blocks) { blocks[i].x = blocks[i].PrevX;}for (i in strawberry) {strawberry[i].x = strawberry[i].PrevX;}for (i in salt) {salt[i].x = salt[i].PrevX}
+slug.y = slug.PrevY;pipe.x = pipe.PrevX;for (i in blocks) { blocks[i].x = blocks[i].PrevX;}for (i in strawberry) {strawberry[i].x = strawberry[i].PrevX;}for (i in salt) {salt[i].x = salt[i].PrevX;}
 //On death half the points
 points /= 2;
 //Round up the points
@@ -372,18 +372,18 @@ if (hearts.length > 3) hearts.pop();
 */
 if (editor && !stopLoop) {
 if (rmStraw) {
-window.addEventListener("click", function() {for (i = 0; i < 1; i++ ) { if (!clicking) { strawberry.push(new Object(images["strawberry"], mouseX - 8 , mouseY - 8, 16, 16));clicking = true};}console.log("X: " + mouseX + "|Y: " + mouseY);}, false);
+window.addEventListener("click", function() {for (i = 0; i < 1; i++ ) { if (!clicking) { strawberry.push(new Object(images["strawberry"], mouseX - 8 , mouseY - 8, 16, 16));clicking = true;};}console.log("X: " + mouseX + "|Y: " + mouseY);}, false);
 }
 if (rmBlock) {
-window.addEventListener("click", function() {for (i = 0; i < 1; i++ ) { if (!clicking) { blocks.push(new Object(images["block"], i *32 + mouseX - 16, mouseY - 16, 32, 32));clicking = true};}console.log("X: " + mouseX + "|Y: " + mouseY);}, false);
+window.addEventListener("click", function() {for (i = 0; i < 1; i++ ) { if (!clicking) { blocks.push(new Object(images["block"], i *32 + mouseX - 16, mouseY - 16, 32, 32));clicking = true;};}console.log("X: " + mouseX + "|Y: " + mouseY);}, false);
 }
 if (rmSalt) {
-window.addEventListener("click", function() {for (i = 0; i < 1; i++ ) { if (!clicking) { salt.push(new Object(images["salt"], mouseX - 4, mouseY - 8, 32, 8));clicking = true};}console.log("X: " + mouseX + "|Y: " + mouseY);}, false);
+window.addEventListener("click", function() {for (i = 0; i < 1; i++ ) { if (!clicking) { salt.push(new Object(images["salt"], mouseX - 4, mouseY - 8, 32, 8));clicking = true;};}console.log("X: " + mouseX + "|Y: " + mouseY);}, false);
 }
 if (rmSaltball) {
-window.addEventListener("click", function() {for (i = 0; i < 1; i++ ) { if (!clicking) { salt_ball.push(new Object(images["salt_ball"], mouseX - 4, mouseY - 4, 8, 8));clicking = true};}console.log("X: " + mouseX + "|Y: " + mouseY);}, false);
+window.addEventListener("click", function() {for (i = 0; i < 1; i++ ) { if (!clicking) { salt_ball.push(new Object(images["salt_ball"], mouseX - 4, mouseY - 4, 8, 8));clicking = true;};}console.log("X: " + mouseX + "|Y: " + mouseY);}, false);
 }
-window.addEventListener("mouseup", function() {clicking = false}, false);
+window.addEventListener("mouseup", function() {clicking = false;}, false);
 stopLoop = true;
 }
 //Deal with key events
@@ -532,7 +532,7 @@ if (velocitY < gravity) { velocitY += weight; }
 //Add velocity to slug
 slug.y += velocitY;
 //If the slug falls out of the canvas reset the game
-if (slug.y > canvas.height) {reset()}
+if (slug.y > canvas.height) {reset();}
 for (i in blocks){
 //Check for collision with block - had to play around with it to stop the objects locking together
 if (slug.isCollide(blocks[i]) && slug.y + slug.height / 2 < blocks[i].y){slug.y = blocks[i].y - blocks[i].height;velocitY = 0;isJump = false;disableJump = false;if (!soundPlaying) {randomSound();soundPlaying = true;}if (Key.isDown(Key.LEFT) || Key.isDown(Key.RIGHT)) {randomSound();}if (!blocks[i].changed) {randomBlock(i);blocks[i].changed = true;}
@@ -565,7 +565,7 @@ if (slug.isCollide(salt_ball[o]) && !coolDown) {
     //Remove a life
     hearts.pop();
     //If the player has enough hearts not to be reset then create blood particles
-    if (hearts.length != 0) {
+    if (hearts.length !== 0) {
     for (i = 0; i< amountOfSplatter; i++) {
     //Push blood particles into array
     particles.push(new particle);
@@ -575,7 +575,7 @@ if (slug.isCollide(salt_ball[o]) && !coolDown) {
     setTimeout(function() {coolDown = false;}, 2000);
   }
 //Add velocity to salt balls
-if (salt_ball[o] != undefined && salt_ball[o] != undefined){
+if (salt_ball[o] !== undefined && salt_ball[o] !== undefined){
 salt_ball[o].x += salt_ball[o].ballSpeedX;
 salt_ball[o].y += salt_ball[o].ballSpeedY;
 //Reverse velocity if the balls hit the edge of the canvas
@@ -596,7 +596,7 @@ for (i in salt) {
     //Remove a life
     hearts.pop();
     //If the player has enough hearts not to be reset then create blood particles
-    if (hearts.length != 0) {
+    if (hearts.length !== 0) {
     for (i = 0; i< amountOfSplatter; i++) {
      //Push blood particles into array
      particles.push(new particle);
@@ -621,23 +621,31 @@ points += 1;
 if (coolDown) {
 setTimeout(function() {
 context.drawImage(slug.Sprite, slug.x, slug.y);
-}, 50)
+}, 50);
 }
 else {
 context.drawImage(slug.Sprite, slug.x, slug.y);
 }
 context.drawImage(pipe.Sprite, pipe.x, pipe.y);
 for (i in salt_ball) {
+if (salt_ball[i].x + salt_ball[i].width > 0 || salt_ball[i].x < canvas.width) {
 context.drawImage(salt_ball[i].Sprite, salt_ball[i].x, salt_ball[i].y);
 }
+}
 for (o in salt) {
+if (salt[o].x + salt[o].width > 0 || salt[o].x < canvas.width){
 context.drawImage(salt[o].Sprite, salt[o].x, salt[o].y);
 }
+}
 for (i in blocks) {
+if (blocks[i].x + blocks[i].width > 0 || blocks[i].x < canvas.width) {
 context.drawImage(blocks[i].Sprite, blocks[i].x, blocks[i].y);
 }
+}
 for (i in strawberry) {
+if (strawberry[i].x + strawberry[i].width > 0 || strawberry[i].x < canvas.width) {
 context.drawImage(strawberry[i].Sprite, strawberry[i].x, strawberry[i].y);
+}
 }
 for (i in hearts) {
 context.drawImage(hearts[i].Sprite, hearts[i].x, hearts[i].y);
@@ -721,7 +729,7 @@ context.fillStyle = "red";
 //Draw blood
 context.arc(this.x, this.y, this.r, 0, this.circle, false);
 context.fill();
-}
+};
 //Set initial variables for slime particle
 function particleSlime() {
   this.x = slug.x + 16;
@@ -750,7 +758,7 @@ context.fillStyle = "green";
 //Draw slime particle
 context.arc(this.x, this.y, this.r, 0, this.circle, false);
 context.fill();
-}
+};
 //Function from slimeball - passes in direction
 function slimeBall(dir) {
 //Set direction for slimeball
@@ -760,7 +768,7 @@ this.Sprite = images["slime"];
 //Depending on the direction set location of ball
 //With this it looks like it comes from the 
 //front of the slug either way
-if (this.dir == "left") {
+if (this.dir === "left") {
 this.x = slug.x + slug.width / 5;
 this.y = slug.y + slug.height / 2;
 }
@@ -773,12 +781,12 @@ this.y = slug.y + slug.height / 2;
 //Draws slimeballs
 slimeBall.prototype.Create = function() {
 //Send slimeballs right
-if (this.dir == "right") this.x += 5;
+if (this.dir === "right") this.x += 5;
 //Send slimeballs left
-if (this.dir == "left") this.x -= 5;
+if (this.dir === "left") this.x -= 5;
 //Draw image to canvas
 context.drawImage(this.Sprite, this.x, this.y);
-}
+};
 function reset() {
 //Play hurt sound
 hurtSound.play();
