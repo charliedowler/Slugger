@@ -575,12 +575,14 @@ if (slug.isCollide(salt_ball[o]) && !coolDown) {
     setTimeout(function() {coolDown = false;}, 2000);
   }
 //Add velocity to salt balls
+if (salt_ball[o] != undefined && salt_ball[o] != undefined){
 salt_ball[o].x += salt_ball[o].ballSpeedX;
 salt_ball[o].y += salt_ball[o].ballSpeedY;
 //Reverse velocity if the balls hit the edge of the canvas
 if (salt_ball[o].y < 0 || salt_ball[o].y > canvas.height) {
   //Reverse velocity
   salt_ball[o].ballSpeedY = -salt_ball[o].ballSpeedY;
+}
 }
 }
 }
