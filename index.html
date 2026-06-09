@@ -1,16 +1,23 @@
-<html>
-	<head>
-		<title>Slugger</title>
-		<script src="SCRIPT/jquery.js"></script>
-		<script src="SCRIPT/welcome.js"></script>
-		<script src="SCRIPT/game.js"></script>
-		<link href="CSS/style.css" rel="stylesheet" type="text/css"/>
-	</head>
-		<body onload="init()">
-			<audio id="themeSound" src="SOUNDS/theme.mp3" onended="replayTheme()"></audio>
-			<canvas style="" width="600" height="300" id="canvas">Sorry, your browser doesn't support the canvas tag.</canvas>
-			<br>
-			<p style="text-align:center;"><b>Left</b> and <b>Right</b> arrow keys to move and <b>Space</b> to jump.</p>
-			<p style="text-align:center;">Collect the strawberrys and avoid the salt<br><b>Still working on it and there is no ending!</b></p>
-		</body>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="IMAGES/strawberry.png" />
+    <title>Slugger</title>
+    <script type="module" src="/src/main.js"></script>
+  </head>
+  <body>
+    <canvas id="canvas" width="600" height="300">
+      Sorry, your browser doesn't support the canvas tag.
+    </canvas>
+    <p class="controls">
+      <b>Left</b> and <b>Right</b> arrow keys to move, <b>Space</b> to jump, <b>S</b> to shoot
+      slime.
+    </p>
+    <p class="controls">Collect the strawberries, avoid the salt, and reach the pipe to win!</p>
+    <p class="controls">
+      <button id="sound-toggle" type="button">🔊 Sound: On</button>
+    </p>
+  </body>
 </html>

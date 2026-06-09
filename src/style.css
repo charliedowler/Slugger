@@ -1,0 +1,29 @@
+body {
+  font-family: Arial, sans-serif;
+  width: 600px;
+  margin: 0 auto;
+  padding: 0;
+  overflow: hidden;
+}
+
+#canvas {
+  border: 1px solid #000;
+  background-repeat: repeat;
+}
+
+.controls {
+  text-align: center;
+}
+
+#sound-toggle {
+  font: inherit;
+  padding: 6px 14px;
+  cursor: pointer;
+  border: 1px solid #000;
+  border-radius: 6px;
+  background: #f4f4f4;
+}
+
+#sound-toggle:hover {
+  background: #e4e4e4;
+}
