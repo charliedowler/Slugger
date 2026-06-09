@@ -59,25 +59,28 @@ function canReach(from, to) {
 const count = Number(process.argv[2] ?? 500);
 let failures = 0;
 
+// Check several difficulty tiers — the hazard ramp must not break traversal.
+const TIERS = [1, 4, 8];
 for (let i = 0; i < count; i++) {
   const seed = Math.floor(Math.random() * 2 ** 32);
-  const level = generateLevel(seed);
-  const platforms = platformsFromBlocks(level.blocks);
-
-  for (let p = 0; p < platforms.length - 1; p++) {
-    if (!canReach(platforms[p], platforms[p + 1])) {
-      failures += 1;
-      console.error(
-        `UNREACHABLE seed=${seed} step ${p}: ` +
-          `${JSON.stringify(platforms[p])} -> ${JSON.stringify(platforms[p + 1])}`,
-      );
-      break;
+  for (const tier of TIERS) {
+    const level = generateLevel(seed, tier);
+    const platforms = platformsFromBlocks(level.blocks);
+    for (let p = 0; p < platforms.length - 1; p++) {
+      if (!canReach(platforms[p], platforms[p + 1])) {
+        failures += 1;
+        console.error(
+          `UNREACHABLE seed=${seed} level=${tier} step ${p}: ` +
+            `${JSON.stringify(platforms[p])} -> ${JSON.stringify(platforms[p + 1])}`,
+        );
+        break;
+      }
     }
   }
 }
 
 if (failures === 0) {
-  console.log(`✓ ${count} generated levels are all fully traversable.`);
+  console.log(`✓ ${count} seeds × tiers [${TIERS}] are all fully traversable.`);
 } else {
   console.error(`✗ ${failures}/${count} levels had an unreachable step.`);
   process.exit(1);

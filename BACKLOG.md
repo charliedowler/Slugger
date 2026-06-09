@@ -6,7 +6,8 @@ single-purpose so one iteration can finish + verify one item. Mark `[x]` done,
 
 ## Gameplay
 - [x] Replay flow: game-over screen + "Play Again" → brand-new random map.
-- [ ] Win → next level with ramping difficulty (more hazards, wider gaps).
+- [x] Win → next level with ramping difficulty (more hazards). (gaps unchanged
+      — widening gaps is deferred; needs multi-tier solvability re-check.)
 - [ ] Pause (P key) with an overlay.
 - [ ] High-score persistence in localStorage (reuse the audio settings pattern).
 - [ ] Shareable seed via `?seed=` URL (the generator is already deterministic).
@@ -37,6 +38,12 @@ single-purpose so one iteration can finish + verify one item. Mark `[x]` done,
 - maxGapPx.max: ≤ ~120 (within a comfortable jump). ✅ met (112).
 
 ## Log (most recent first)
+- 2026-06-09 · win → next level · **accepted (with caveat)** · level counter +
+  HUD "Level N"; hazards ramp with level (verified 9.4→15.6→24.7 hazards/lvl at
+  L1/3/6); solvability still 100% across tiers [1,4,8]. Win advances level &
+  keeps score; game-over restarts at L1. CAVEAT: the win/level-complete screen
+  was NOT captured live — an autopilot can't reliably clear a full level
+  (37 deaths). Win→nextLevel code verified by review (mirrors tested replay flow).
 - 2026-06-09 · replay flow · **accepted** · game-over screen (score + "click to
   play again") and a win-screen play-again; click regenerates a fresh map.
   Verified in browser; no console errors. Replaces the old halve-score-and-continue.

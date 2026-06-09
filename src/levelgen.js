@@ -112,9 +112,19 @@ function nextPlatform(prev, rng) {
 /**
  * Generate a complete, guaranteed-solvable level.
  * @param {number} [seed] pass a fixed seed to reproduce a specific map.
+ * @param {number} [level] difficulty tier (1 = base). Higher = more hazards.
+ *   Only non-structural difficulty scales, so solvability is unaffected.
  */
-export function generateLevel(seed = Math.floor(Math.random() * 2 ** 32)) {
+export function generateLevel(seed = Math.floor(Math.random() * 2 ** 32), level = 1) {
   const rng = mulberry32(seed);
+
+  // Difficulty ramp: more hazards as the level rises (capped). Platform shape
+  // and gaps are unchanged, so every tier stays 100% traversable.
+  const tier = Math.max(0, level - 1);
+  const enemyProb = Math.min(0.18 + 0.05 * tier, 0.5);
+  const saltProb = Math.min(0.22 + 0.05 * tier, 0.55);
+  const saltBallMin = 3 + tier;
+  const saltBallMax = Math.min(6 + tier * 2, 16);
 
   // Starting platform: long, flat, at ground level, sitting under the slug's
   // fixed spawn point so it always lands safely.
@@ -136,7 +146,7 @@ export function generateLevel(seed = Math.floor(Math.random() * 2 ** 32)) {
 
     // Patrolling enemy on some wider platforms. Stored as platform-relative
     // bounds; the game positions it on top once it knows the enemy's height.
-    if (p.len >= 3 && rng() < 0.18) {
+    if (p.len >= 3 && rng() < enemyProb) {
       enemies.push({
         x: p.x + (p.len * BLOCK_SIZE) / 2,
         top: p.y,
@@ -156,7 +166,7 @@ export function generateLevel(seed = Math.floor(Math.random() * 2 ** 32)) {
     // Salt sits on top of an *interior* platform tile (never the first or last
     // block, so there's always a safe edge to land on). Avoidable, and never on
     // the first two platforms.
-    if (idx >= 2 && p.len >= 3 && rng() < 0.22) {
+    if (idx >= 2 && p.len >= 3 && rng() < saltProb) {
       const tile = randInt(rng, 1, p.len - 2);
       salt.push([p.x + tile * BLOCK_SIZE, p.y - SALT.height]);
     }
@@ -171,7 +181,7 @@ export function generateLevel(seed = Math.floor(Math.random() * 2 ** 32)) {
 
   // Bouncing salt balls scattered through open air.
   const saltBalls = [];
-  for (let i = 0, n = randInt(rng, 3, 6); i < n; i++) {
+  for (let i = 0, n = randInt(rng, saltBallMin, saltBallMax); i < n; i++) {
     saltBalls.push([randInt(rng, 400, LEVEL_LENGTH), randInt(rng, 40, 220)]);
   }
 

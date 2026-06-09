@@ -38,6 +38,7 @@ export class Game {
     this.sounds = sounds;
 
     this.points = 0;
+    this.level = 1;
     this.winGame = false;
     this.gameOver = false; // out of lives — showing the game-over screen
     this.dying = false; // playing the death drop-off animation
@@ -89,13 +90,14 @@ export class Game {
   }
 
   #onClick = () => {
-    if (this.winGame || this.gameOver) this.#restart();
+    if (this.winGame) this.#nextLevel();
+    else if (this.gameOver) this.#restart();
   };
 
   #build() {
     const { images } = this;
-    const level = generateLevel();
-    this.seed = level.seed;
+    const levelData = generateLevel(undefined, this.level);
+    this.seed = levelData.seed;
 
     this.slug = new Entity(
       images.slug_1,
@@ -106,28 +108,28 @@ export class Game {
     );
     this.pipe = new Entity(
       images.mario_pipe,
-      level.pipe.x,
-      level.pipe.y,
-      level.pipe.width,
-      level.pipe.height,
+      levelData.pipe.x,
+      levelData.pipe.y,
+      levelData.pipe.width,
+      levelData.pipe.height,
     );
 
-    this.blocks = level.blocks.map(
+    this.blocks = levelData.blocks.map(
       ([x, y]) => new Entity(images.block, x, y, L.BLOCK_SIZE, L.BLOCK_SIZE),
     );
-    this.strawberries = level.strawberries.map(
+    this.strawberries = levelData.strawberries.map(
       ([x, y]) => new Entity(images.strawberry, x, y, L.STRAWBERRY_SIZE, L.STRAWBERRY_SIZE),
     );
-    this.salt = level.salt.map(
+    this.salt = levelData.salt.map(
       ([x, y]) => new Entity(images.salt, x, y, L.SALT.width, L.SALT.height),
     );
-    this.saltBalls = level.saltBalls.map(([x, y]) => {
+    this.saltBalls = levelData.saltBalls.map(([x, y]) => {
       const ball = new Entity(images.salt_ball, x, y, L.SALT_BALL_SIZE, L.SALT_BALL_SIZE);
       ball.vx = C.SALT_BALL_VX;
       ball.vy = C.SALT_BALL_VY;
       return ball;
     });
-    this.enemies = level.enemies.map(
+    this.enemies = levelData.enemies.map(
       (e) => new Enemy(e.x, e.top - C.ENEMY_SIZE, e.leftBound, e.rightBound),
     );
 
@@ -476,12 +478,11 @@ export class Game {
     }
   }
 
-  // "Play again": reset all transient state and generate a brand-new map.
-  #restart() {
+  // Clear all transient per-life state (shared by next-level and play-again).
+  #resetState() {
     this.winGame = false;
     this.gameOver = false;
     this.dying = false;
-    this.points = 0;
     this.velocityY = 0.5;
     this.isRight = true;
     this.isLeft = false;
@@ -503,7 +504,21 @@ export class Game {
     this.blood = [];
     this.slimeTrail = [];
     this.popups = [];
-    this.#build(); // fresh random level + slug + full health
+  }
+
+  // Won the level: advance difficulty, keep the cumulative score.
+  #nextLevel() {
+    this.level += 1;
+    this.#resetState();
+    this.#build(); // harder random level + slug + full health
+  }
+
+  // Out of lives: back to level 1 with a fresh score.
+  #restart() {
+    this.level = 1;
+    this.points = 0;
+    this.#resetState();
+    this.#build();
   }
 
   #randomSlimeSprite() {
@@ -566,6 +581,9 @@ export class Game {
     ctx.font = '24px arial';
     ctx.textAlign = 'left';
     ctx.fillText(`Collected: ${this.points}/${this.amountOfStrawberries}`, 10, 25);
+    ctx.textAlign = 'center';
+    ctx.fillText(`Level ${this.level}`, canvas.width / 2, 25);
+    ctx.textAlign = 'left';
 
     this.#renderAmmo();
   }
@@ -618,17 +636,17 @@ export class Game {
     const { ctx, canvas } = this;
     const cx = canvas.width / 2;
     const cy = canvas.height / 2;
-    ctx.fillStyle = '#fff';
-    ctx.font = '24px Arial';
+    ctx.fillStyle = '#5dd35d';
+    ctx.font = 'bold 30px Arial';
     ctx.textAlign = 'center';
+    ctx.fillText(`Level ${this.level} complete!`, cx, cy - 12);
+    ctx.fillStyle = '#fff';
+    ctx.font = '20px Arial';
+    ctx.fillText(`Score: ${this.points}`, cx, cy + 18);
 
-    const message =
-      this.points > this.amountOfStrawberries / 2
-        ? 'Your awesome! Ever thought of turning pr0?'
-        : 'You do know how to use a computer right?';
-    ctx.fillText(message, cx, cy - 10);
-    ctx.fillText(`You got ${this.points}/${this.amountOfStrawberries}`, cx, cy + 24);
-    this.#renderPlayAgain(cx, cy + 58);
+    ctx.fillStyle = '#ffe44d';
+    ctx.font = '16px Arial';
+    ctx.fillText(`▶ Click for level ${this.level + 1}`, cx, cy + 52);
   }
 
   #renderGameOver() {
