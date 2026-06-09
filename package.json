@@ -9,7 +9,10 @@
     "build": "vite build",
     "preview": "vite preview",
     "format": "prettier --write .",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "verify": "node scripts/verify-solvable.mjs",
+    "playtest": "node scripts/playtest.mjs",
+    "harness": "bash scripts/harness.sh"
   },
   "devDependencies": {
     "@eslint/js": "^9.17.0",
