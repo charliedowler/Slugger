@@ -136,7 +136,7 @@ export function generateLevel(seed = Math.floor(Math.random() * 2 ** 32)) {
 
     // Patrolling enemy on some wider platforms. Stored as platform-relative
     // bounds; the game positions it on top once it knows the enemy's height.
-    if (p.len >= 3 && rng() < 0.3) {
+    if (p.len >= 3 && rng() < 0.18) {
       enemies.push({
         x: p.x + (p.len * BLOCK_SIZE) / 2,
         top: p.y,
@@ -156,7 +156,7 @@ export function generateLevel(seed = Math.floor(Math.random() * 2 ** 32)) {
     // Salt sits on top of an *interior* platform tile (never the first or last
     // block, so there's always a safe edge to land on). Avoidable, and never on
     // the first two platforms.
-    if (idx >= 2 && p.len >= 3 && rng() < 0.45) {
+    if (idx >= 2 && p.len >= 3 && rng() < 0.22) {
       const tile = randInt(rng, 1, p.len - 2);
       salt.push([p.x + tile * BLOCK_SIZE, p.y - SALT.height]);
     }
@@ -171,7 +171,7 @@ export function generateLevel(seed = Math.floor(Math.random() * 2 ** 32)) {
 
   // Bouncing salt balls scattered through open air.
   const saltBalls = [];
-  for (let i = 0, n = randInt(rng, 8, 12); i < n; i++) {
+  for (let i = 0, n = randInt(rng, 3, 6); i < n; i++) {
     saltBalls.push([randInt(rng, 400, LEVEL_LENGTH), randInt(rng, 40, 220)]);
   }
 

@@ -30,8 +30,13 @@ single-purpose so one iteration can finish + verify one item. Mark `[x]` done,
 ## Tuning targets (what "good" means for the metrics harness)
 - Solvability: 100% (hard gate).
 - jumpsRequired.avg: ~6–12 (engaging but not punishing).
-- hazardDensityPer1000px.avg: ~2–4.
-- maxGapPx.max: ≤ ~120 (within a comfortable jump).
+  - NOTE: currently ~16.6. Lowering it means fewer up-steps / flatter levels,
+    which fights the "use the full canvas height" preference. **Deferred to a
+    human decision** — do not auto-flatten.
+- hazardDensityPer1000px.avg: ~2–4. ✅ met (3.05).
+- maxGapPx.max: ≤ ~120 (within a comfortable jump). ✅ met (112).
 
 ## Log (most recent first)
+- 2026-06-09 · tune hazard density · **accepted** · salt/saltball/enemy rates
+  down; hazardDensity 6.21→3.05 (in band), solvability still 100%, no regressions.
 <!-- iteration entries: date · item · outcome (accepted/rejected) · note -->
