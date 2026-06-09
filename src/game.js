@@ -39,6 +39,7 @@ export class Game {
 
     this.points = 0;
     this.winGame = false;
+    this.gameOver = false; // out of lives — showing the game-over screen
     this.dying = false; // playing the death drop-off animation
     // Health is tracked in half-hearts (2 per heart) so damage can be fractional.
     this.maxHealth = C.STARTING_LIVES * 2;
@@ -79,10 +80,17 @@ export class Game {
       this.slimeParticlesStop = false;
     });
 
+    // On the win / game-over screen, a click starts a fresh random map.
+    this.canvas.addEventListener('click', this.#onClick);
+
     this.lastTime = performance.now();
     this.accumulator = 0;
     requestAnimationFrame(this.#loop);
   }
+
+  #onClick = () => {
+    if (this.winGame || this.gameOver) this.#restart();
+  };
 
   #build() {
     const { images } = this;
@@ -135,7 +143,7 @@ export class Game {
     this.accumulator += frame;
 
     while (this.accumulator >= C.STEP_MS) {
-      if (!this.winGame) this.#update();
+      if (!this.winGame && !this.gameOver) this.#update();
       this.accumulator -= C.STEP_MS;
     }
 
@@ -437,7 +445,7 @@ export class Game {
     this.#playSound('hurt');
     this.health -= 2;
     if (this.health <= 0) {
-      this.#fullReset();
+      this.gameOver = true; // fell to death on the last life
       return;
     }
     this.slug.y = 100;
@@ -457,30 +465,45 @@ export class Game {
     this.#playSound('hurt');
   }
 
-  // Fall under gravity until off-screen, then restart.
+  // Fall under gravity until off-screen, then it's game over.
   #updateDeath() {
     if (this.velocityY < C.GRAVITY) this.velocityY += C.WEIGHT;
     this.slug.y += this.velocityY;
     this.#updateParticles();
-    if (this.slug.y > this.canvas.height) this.#fullReset();
+    if (this.slug.y > this.canvas.height) {
+      this.dying = false;
+      this.gameOver = true;
+    }
   }
 
-  // Out of lives: halve the score and start over.
-  #fullReset() {
+  // "Play again": reset all transient state and generate a brand-new map.
+  #restart() {
+    this.winGame = false;
+    this.gameOver = false;
     this.dying = false;
-    this.slug.y = this.slug.prevY;
+    this.points = 0;
     this.velocityY = 0.5;
+    this.isRight = true;
+    this.isLeft = false;
     this.jumping = false;
     this.grounded = false;
-    this.pipe.resetX();
-    for (const e of this.blocks) e.resetX();
-    for (const e of this.strawberries) e.resetX();
-    for (const e of this.salt) e.resetX();
-    for (const e of this.enemies) e.reset();
-    this.points = Math.round(this.points / 2);
+    this.jumpHeld = false;
+    this.coyoteTimer = 0;
+    this.jumpBuffer = 0;
+    this.shooting = false;
+    this.slimeParticlesStop = false;
+    this.coolDown = false;
+    this.soundPlaying = false;
+    this.bgPos = 0;
     this.ammo = C.MAX_SLIMEBALLS;
     this.refillTimer = 0;
-    this.health = this.maxHealth;
+    this.animTimer = 0;
+    this.walkToggle = false;
+    this.slimeballs = [];
+    this.blood = [];
+    this.slimeTrail = [];
+    this.popups = [];
+    this.#build(); // fresh random level + slug + full health
   }
 
   #randomSlimeSprite() {
@@ -500,6 +523,11 @@ export class Game {
   #render() {
     const { ctx, canvas } = this;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    if (this.gameOver) {
+      this.#renderGameOver();
+      return;
+    }
 
     if (this.winGame) {
       this.#renderWin();
@@ -598,7 +626,30 @@ export class Game {
       this.points > this.amountOfStrawberries / 2
         ? 'Your awesome! Ever thought of turning pr0?'
         : 'You do know how to use a computer right?';
-    ctx.fillText(message, cx, cy);
-    ctx.fillText(`You got ${this.points}/${this.amountOfStrawberries}`, cx, cy + 40);
+    ctx.fillText(message, cx, cy - 10);
+    ctx.fillText(`You got ${this.points}/${this.amountOfStrawberries}`, cx, cy + 24);
+    this.#renderPlayAgain(cx, cy + 58);
+  }
+
+  #renderGameOver() {
+    const { ctx, canvas } = this;
+    const cx = canvas.width / 2;
+    const cy = canvas.height / 2;
+    ctx.fillStyle = '#ff5b5b';
+    ctx.font = 'bold 32px Arial';
+    ctx.textAlign = 'center';
+    ctx.fillText('GAME OVER', cx, cy - 10);
+    ctx.fillStyle = '#fff';
+    ctx.font = '20px Arial';
+    ctx.fillText(`You collected ${this.points}/${this.amountOfStrawberries}`, cx, cy + 22);
+    this.#renderPlayAgain(cx, cy + 56);
+  }
+
+  #renderPlayAgain(cx, y) {
+    const { ctx } = this;
+    ctx.fillStyle = '#ffe44d';
+    ctx.font = '16px Arial';
+    ctx.textAlign = 'center';
+    ctx.fillText('▶ Click to play again', cx, y);
   }
 }

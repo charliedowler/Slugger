@@ -5,7 +5,7 @@ single-purpose so one iteration can finish + verify one item. Mark `[x]` done,
 `[~]` in progress, `[!]` rejected (with a one-line reason in the log).
 
 ## Gameplay
-- [ ] Replay flow: game-over screen + "Play Again" → brand-new random map.
+- [x] Replay flow: game-over screen + "Play Again" → brand-new random map.
 - [ ] Win → next level with ramping difficulty (more hazards, wider gaps).
 - [ ] Pause (P key) with an overlay.
 - [ ] High-score persistence in localStorage (reuse the audio settings pattern).
@@ -37,6 +37,9 @@ single-purpose so one iteration can finish + verify one item. Mark `[x]` done,
 - maxGapPx.max: ≤ ~120 (within a comfortable jump). ✅ met (112).
 
 ## Log (most recent first)
+- 2026-06-09 · replay flow · **accepted** · game-over screen (score + "click to
+  play again") and a win-screen play-again; click regenerates a fresh map.
+  Verified in browser; no console errors. Replaces the old halve-score-and-continue.
 - 2026-06-09 · tune hazard density · **accepted** · salt/saltball/enemy rates
   down; hazardDensity 6.21→3.05 (in band), solvability still 100%, no regressions.
 <!-- iteration entries: date · item · outcome (accepted/rejected) · note -->
