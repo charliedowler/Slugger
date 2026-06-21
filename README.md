@@ -1,3 +1,5 @@
+> **⚠️ This repository is no longer maintained.** No further updates, bug fixes, or support will be provided.
+
 # Slugger
 
 A small browser platformer: guide a slug across the level, collect the
